@@ -55,7 +55,13 @@ const gitlab = require('gitlab')({
 // }
 
 async function createBranch() {
-    shell.exec("git co master");
+    let {commitMsg} = await inquirer.prompt({
+        type: 'input',
+        name: 'commitMsg',
+        message: '输入提交的信息',
+        choices:['feature', 'hotfix']
+    });
+    console.log(shell.exec(`git add *;git ci -am ${commitMsg};git co master`));
     let {branchType} = await inquirer.prompt({
         type: 'list',
         name: 'branchType',
