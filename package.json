@@ -1,12 +1,11 @@
 {
   "name": "terrible-commands",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "There are some commands, which can help us do somethings convenient.",
-  "main": "index.js",
   "bin": {
-    "tcd":"index.js",
-    "tcd-nbr": "bin/new-branch",
-    "tcd-test":"bin/test"
+    "tcd": "bin/tcd",
+    "tcd-nb": "bin/tcd-nb",
+    "tcd-ts": "bin/tcd-ts"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
