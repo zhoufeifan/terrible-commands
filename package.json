@@ -1,0 +1,25 @@
+{
+  "name": "terrible-commands",
+  "version": "1.0.0",
+  "description": "There are some commands, which can help us do somethings convenient.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhoufeifan/terrible-commands.git"
+  },
+  "author": "zhoufeifan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zhoufeifan/terrible-commands/issues"
+  },
+  "homepage": "https://github.com/zhoufeifan/terrible-commands#readme",
+  "devDependencies": {
+    "commander": "^2.13.0",
+    "gitlab": "^1.7.1",
+    "inquirer": "^5.0.0",
+    "shelljs": "^0.8.0"
+  }
+}
