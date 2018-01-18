@@ -1,10 +1,10 @@
 const inquirer = require('inquirer');
 const shell = require('shelljs');
-const {gitlabUrl,gitlabToken} = require('../config.json');
-const gitlab = require('gitlab')({
-    url: gitlabUrl,
-    token: gitlabToken
-});
+// const {gitlabUrl,gitlabToken} = require('../config.json');
+// const gitlab = require('gitlab')({
+//     url: gitlabUrl,
+//     token: gitlabToken
+// });
 // function getGroups() {
 //     return new Promise((resolve)=>{
 //         gitlab.groups.all(function(groups) {
