@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "description": "There are some commands, which can help us do somethings convenient.",
   "main": "index.js",
+  "bin": {
+    "tcd":"index.js",
+    "tcd-nbr": "bin/new-branch",
+    "tcd-test":"bin/test"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
