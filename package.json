@@ -1,6 +1,6 @@
 {
   "name": "terrible-commands",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "There are some commands, which can help us do somethings convenient.",
   "bin": {
     "tcd": "bin/tcd",
