@@ -61,23 +61,24 @@ async function createBranch() {
         message: '输入提交的信息',
         choices:['feature', 'hotfix']
     });
-    console.log(shell.exec(`git add *;git ci -am ${commitMsg};git co master`));
+    shell.exec(`git add *;git commit -am ${commitMsg}`);
     let {branchType} = await inquirer.prompt({
         type: 'list',
         name: 'branchType',
         message: '输入要创建的分支类型',
         choices:['feature', 'hotfix']
     });
+    if(branchType === "feature"){
+        shell.exec('git checkout develop');
+    }else if(branchType === "hotfix"){
+        shell.exec('git checkout master');
+    }
     let {branchName} = await inquirer.prompt({
         type:'input',
         name:'branchName',
         message:'请输入分支名称'
     });
-    console.log(branchType,branchName);
-    // gitlab.projects.init();
-    // gitlab.projects.repository.createBranch({projectId,branch:branch||"nima",ref:'master'},(a,b,c)=>{
-    //     console.log(a,b,c);
-    // })
+    shell.exec(`git pull -ff;git checkout -b ${branchType}/${branchName}`)
 }
 
 createBranch();
