@@ -5,7 +5,8 @@
   "bin": {
     "tcd": "bin/tcd",
     "tcd-nb": "bin/tcd-nb",
-    "tcd-ts": "bin/tcd-ts"
+    "tcd-ts": "bin/tcd-ts",
+    "tcd-pb": "bin/tcd-pb"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -21,8 +22,10 @@
   },
   "homepage": "https://github.com/zhoufeifan/terrible-commands#readme",
   "dependencies": {
+    "chalk": "^2.4.1",
     "commander": "^2.13.0",
     "inquirer": "^5.0.0",
+    "ora": "^3.0.0",
     "shelljs": "^0.8.0"
   }
 }
