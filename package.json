@@ -22,7 +22,6 @@
   "homepage": "https://github.com/zhoufeifan/terrible-commands#readme",
   "dependencies": {
     "commander": "^2.13.0",
-    "gitlab": "^1.7.1",
     "inquirer": "^5.0.0",
     "shelljs": "^0.8.0"
   }
