@@ -9,9 +9,10 @@
     "tcd-pb": "bin/tcd-pb"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "n": "node lib/n.js",
-    "ding": "node lib/ding.js"
+    "test": "node scripts/test.js",
+    "test-ding": "node scripts/test-ding.js",
+    "n": "node scripts/n.js",
+    "ding": "node scripts/ding.js"
   },
   "repository": {
     "type": "git",
