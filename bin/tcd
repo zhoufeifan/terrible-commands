@@ -4,7 +4,7 @@ const program = require('commander');
 program
     .version(require('../package').version)
     .usage('<command> [options]')
-    .command('nb', '创建新的分支')
-    .command('pb', '发布')
-    .command('ts', '测试是否可以运行')
+    .command('cb', '创建新的分支')
+    .command('ts', '发布测试')
+    .command('pb', '发布线上')
     .parse(process.argv);

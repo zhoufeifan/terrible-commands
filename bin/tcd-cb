@@ -1,0 +1,4 @@
+#!/usr/bin/env node
+
+const createBranch = require('../lib/createBranch.js');
+createBranch();
