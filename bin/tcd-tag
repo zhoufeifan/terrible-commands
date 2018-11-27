@@ -1,0 +1,4 @@
+#!/usr/bin/env node
+
+const createTag = require('../lib/createTag.js');
+createTag();

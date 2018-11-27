@@ -6,7 +6,8 @@
     "tcd": "bin/tcd",
     "tcd-cb": "bin/tcd-cb",
     "tcd-ts": "bin/tcd-ts",
-    "tcd-pb": "bin/tcd-pb"
+    "tcd-pb": "bin/tcd-pb",
+    "tcd-tag": "bin/tcd-tag"
   },
   "scripts": {
     "test": "node scripts/test.js",

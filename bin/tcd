@@ -7,4 +7,5 @@ program
     .command('cb', '创建新的分支')
     .command('ts', '发布测试')
     .command('pb', '发布线上')
+    .command('tag', '打tag')
     .parse(process.argv);
