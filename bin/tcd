@@ -8,4 +8,5 @@ program
     .command('ts', '发布测试')
     .command('pb', '发布线上')
     .command('tag', '打tag')
+    .command('db', '删除本地以及关联的远程分支')
     .parse(process.argv);
