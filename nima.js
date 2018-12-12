@@ -1,11 +1,5 @@
 const puppeteer = require('puppeteer-core')
 const notifier = require('node-notifier')
-notifier.notify({
-  title: '重大提示',
-  message: '发布成功'
-})
-return
-
 // 进入发布界面
 function gotoPublishTab(pubType){
   const projectNameMap = {
@@ -26,14 +20,16 @@ function gotoPublishTab(pubType){
 
 // 执行发布的步骤
 async function doPublish(pubType){
-  const $btn1 = "查看变更"
-  const $btn2 = "生成版本替换"
-  const $btn3 = "测试"
-  const $btn4 = "正式"
+  const $btns = $('footer>button')
+  const $btn1 = $btns[4] // 查看变更
+  const $btn2 = $btns[3] // 生成版本替换
+  const $btn3 = $btns[2] // 测试环境
+  const $btn4 = $btns[0] // 正式环境
+  const $publishTab = $('.tab-content > .tab-pane')[2];
   // 判断目标按钮是否可以点击
   const checkBtnClickAble = ($targetBtn)=>{
     return new Promise((resolve)=>{
-      if($targetBtn.attr('disabled')){
+      if($targetBtn.getAttribute("disabled") === "disabled"){
         setTimeout( async ()=>{
           await checkBtnClickAble($targetBtn)
           resolve()
@@ -44,15 +40,20 @@ async function doPublish(pubType){
     })
   }
 
-  const checkFinalPublish = ($container)=>{
-    return new Promise((resolve)=>{
+  const checkFinalPublish = (times = 0)=>{
+    return new Promise((resolve, reject)=>{
+      if(times > 10000){
+        reject('发布失败')
+        return
+      } 
       setTimeout(async ()=>{
-        const finalText = currentText.text().slice(-10)
-        if(finalText.match('结束') && finalText.match('成功')){
-           await checkFinalPublish($container)
-           resolve()
-        } else{
+        const finalText = $publishTab.innerHTML.slice(-20)
+        if(finalText.match('结束') && finalText.match('发布耗时')){
           resolve()
+        } else{
+          checkFinalPublish(times + 5000)
+          .then(resolve)
+          .catch(reject)
         }
       },5000)
     })
@@ -63,9 +64,12 @@ async function doPublish(pubType){
   $btn2.click()
   await checkBtnClickAble($btn3)
   $btn3.click()
-  const $logContainer = "输出日志"
-  await checkFinalPublish($logContainer)
-
+  try{
+    await checkFinalPublish()
+    return null
+  } catch (e){
+    return e
+  }
 }
 
 
@@ -81,30 +85,42 @@ async function doPublish(pubType){
     width: 1440,
     height: 900
   })
+
   await page.goto('https://sync.superboss.cc/index.xhtml#/html/publish');
-  // await page.goto('http://www.baidu.com');
-  // page.on('dialog', async dialog => {
-  //   console.log(dialog.message());
-  //   await dialog.dismiss();
-  //   await browser.close();
-  // });
-  // page.evaluate(() => {
-  //   if(confirm("你确定提交吗？")){
-  //     alert(1)
-  //   } else {
-  //     alert(2)
-  //   }
-  // });
+
   const hasLogin = await page.$eval('title', el => {
     const title = el.text
     return title && title !== "二维码登录"
   });
   if(!hasLogin){
     console.log('请先登录')
-    await page.evaluate(() => alert('未登录'));
-    await browser.close();
+    await page.evaluate(() => alert('未登录'))
+    // await browser.close()
+    return
   }
-  await page.evaluate(gotoPublishTab,'test');
-  await page.evaluate(doPublish,'test');
-  await browser.close();
+  // 监听页面中的 确认发布confirm
+  page.on('dialog', async dialog => {
+    if(dialog.message().match('确认发布')){
+      await dialog.accept()
+    } else {
+      await dialog.dismiss();
+    }
+  });
+  // 选择发布的项目，进入发布页面
+  await page.evaluate(gotoPublishTab,'test')
+  // 执行发布的一系列操作
+  const error = await page.evaluate(doPublish,'test')
+  if(error){
+    notifier.notify({
+      title: '发布失败',
+      message: error,
+      wait: true
+    })
+  } else {
+    notifier.notify({
+      title: '发布成功',
+      wait: true
+    })
+    // await browser.close()
+  }
 })();
