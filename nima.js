@@ -1,5 +1,12 @@
+const fs = require('fs')
+const path = require('path')
 const puppeteer = require('puppeteer-core')
 const notifier = require('node-notifier')
+const inquirer = require('inquirer');
+const userHome = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME']
+
+const { dateTimeFormat, warn } = require('./lib/utils.js')
+const configPath = path.join(userHome, '.fq/config.json')
 // 进入发布界面
 function gotoPublishTab(pubType){
   const projectNameMap = {
@@ -72,13 +79,64 @@ async function doPublish(pubType){
   }
 }
 
+// 获取发布码信息
+function getPublishCode(type){
+  if (!fs.existsSync(configPath)) {
+    return {
+      success: false,
+      message: '文件不存在，请输入发布码'
+    }
+  } else {
+    // {
+    //   test: {
+    //     'code':'',
+    //     'date':''
+    //   },
+    //   ding: {
+    //     'code':'',
+    //     'date':''
+    //   },
+    //   n: {
+    //     'code':'',
+    //     'date':''
+    //   }
+    // }
+    config = JSON.parse(fs.readFileSync(configPath))
+    const { code, date } = config[type]
+    if(date !== dateTimeFormat()){
+      return {
+        success: false,
+        message: '发布码过期，请重新输入'
+      }
+    }
+    return {
+      success: true,
+      code
+    }
+  }
+}
+
+// 保存发布码
+function savePublishCode(type, code){
+  if (!fs.existsSync(configPath)) {
+    fs.mkdirSync(configPath)
+    fs.writeJsonSync(configPath, '{}')
+  }
+  const config  = JSON.parse(fs.readFileSync(configPath))
+  config[type] = {
+    code,
+    date: dateTimeFormat(new Date())
+  }
+  fs.writeJsonSync(configPath, JSON.stringify(config))
+}
 
 (async () => {
+  const publishType = 'test'
   const browser = await puppeteer.launch({
     executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
     headless: false,
     slowMo: 250,
-    userDataDir: '/Users/xieyang/Library/Application Support/Google/Chrome/Profile 1'
+    userDataDir: `${userHome}/Library/Application Support/Google/Chrome/Profile 1`
   });
   const page = await browser.newPage();
   page.setViewport({
@@ -107,9 +165,35 @@ async function doPublish(pubType){
     }
   });
   // 选择发布的项目，进入发布页面
-  await page.evaluate(gotoPublishTab,'test')
+  await page.evaluate(gotoPublishTab, publishType)
+
+  const pubCodeInput = await page.$("input[name='publishCode']")
+  try{
+    if(pubCodeInput){
+      const result = getPublishCode(publishType)
+      if(result.success){
+ 
+      } else {
+        warn(result.message)
+        const { pubCode } = await inquirer.prompt({
+         type: 'input',
+         name: 'pubCode',
+         message: '请输入发布码',
+         validate: (code)=>{
+           return code ? true : '请输入发布码'
+         }
+       });
+       savePublishCode(publishType, pubCode)
+      }
+   }
+  }catch(e){
+    console.log(e)
+    await browser.close()
+    return
+  }
+
   // 执行发布的一系列操作
-  const error = await page.evaluate(doPublish,'test')
+  const error = await page.evaluate(doPublish, publishType)
   if(error){
     notifier.notify({
       title: '发布失败',
