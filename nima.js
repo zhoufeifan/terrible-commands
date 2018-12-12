@@ -84,23 +84,9 @@ function getPublishCode(type){
   if (!fs.existsSync(configPath)) {
     return {
       success: false,
-      message: '文件不存在，请输入发布码'
+      message: '请输入发布码'
     }
   } else {
-    // {
-    //   test: {
-    //     'code':'',
-    //     'date':''
-    //   },
-    //   ding: {
-    //     'code':'',
-    //     'date':''
-    //   },
-    //   n: {
-    //     'code':'',
-    //     'date':''
-    //   }
-    // }
     config = JSON.parse(fs.readFileSync(configPath))
     const { code, date } = config[type]
     if(date !== dateTimeFormat()){
@@ -119,15 +105,15 @@ function getPublishCode(type){
 // 保存发布码
 function savePublishCode(type, code){
   if (!fs.existsSync(configPath)) {
-    fs.mkdirSync(configPath)
-    fs.writeJsonSync(configPath, '{}')
+    fs.mkdirSync(path.join(userHome, '.fq'))
+    fs.writeFileSync(configPath, '{}')
   }
   const config  = JSON.parse(fs.readFileSync(configPath))
   config[type] = {
     code,
     date: dateTimeFormat(new Date())
   }
-  fs.writeJsonSync(configPath, JSON.stringify(config))
+  fs.writeFileSync(configPath, JSON.stringify(config))
 }
 
 (async () => {
@@ -172,7 +158,7 @@ function savePublishCode(type, code){
     if(pubCodeInput){
       const result = getPublishCode(publishType)
       if(result.success){
- 
+        pubCodeInput.type(result.code)
       } else {
         warn(result.message)
         const { pubCode } = await inquirer.prompt({
@@ -184,6 +170,7 @@ function savePublishCode(type, code){
          }
        });
        savePublishCode(publishType, pubCode)
+       pubCodeInput.type(pubCode)
       }
    }
   }catch(e){
@@ -205,6 +192,6 @@ function savePublishCode(type, code){
       title: '发布成功',
       wait: true
     })
-    // await browser.close()
+    await browser.close()
   }
 })();
