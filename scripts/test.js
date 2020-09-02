@@ -1,2 +1,4 @@
 const publish = require('../lib/publish.js')
-publish();
+const createTag = require('../lib/createTag.js')
+// publish();
+createTag();
