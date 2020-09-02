@@ -1,1 +1,2 @@
-console.log('test')
+const publish = require('../lib/publish.js')
+publish();
