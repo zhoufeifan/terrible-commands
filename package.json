@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/zhoufeifan/terrible-commands#readme",
   "dependencies": {
+    "axios": "^0.20.0",
     "chalk": "^2.4.1",
     "commander": "^2.13.0",
     "inquirer": "^5.0.0",
